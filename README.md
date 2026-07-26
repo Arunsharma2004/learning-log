@@ -1,13 +1,13 @@
 # Learning Log — Claude Code Mastery
 
-## Day 1 — 14 July 2026
+## Day 1 :
 
 Set up dev environment: Git, Node.js, Python, Windows Terminal.
 Learned core terminal commands (cd, ls, mkdir, cat, cp, mv, pipes, redirects).
 Set up SSH keys and connected to GitHub.
 Created GitHub + Claude accounts.
 
-## Day 2 — 16 July 2026
+## Day 2 :
 
 Learned Git branching, merging, and conflict resolution hands-on.
 Made 9 real commits, created and merged a feature branch, and deliberately
@@ -22,3 +22,12 @@ with each other's work.
 **Key lesson:** switching branches (`git checkout`) physically changes
 the files in your folder to match that branch's snapshot — it's not
 just a label, it's a real state change.
+
+## Day 3
+
+Refreshed core Python: variables, functions, conditionals, loops,
+lists, dictionaries, tuples, file I/O (with open), and error
+handling (try/except).
+
+Wrote 5 scripts by hand (no AI): word counter, calculator, CSV
+parser, file renamer, JSON reader.
