@@ -31,3 +31,14 @@ handling (try/except).
 
 Wrote 5 scripts by hand (no AI): word counter, calculator, CSV
 parser, file renamer, JSON reader.
+
+## Day 4
+
+Learned modules, virtual environments (venv, pip freeze), classes
+(constructors, self, methods, state mutation), and @staticmethod
+decorators.
+
+Built a full CLI todo app by hand: task.py (Task class), storage.py
+(save/load JSON), main.py (argparse CLI with add/list/done commands).
+Wrote 5 pytest tests covering creation, mark_done, to_dict, from_dict,
+and a full round-trip conversion test — all passing.
