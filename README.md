@@ -42,3 +42,20 @@ Built a full CLI todo app by hand: task.py (Task class), storage.py
 (save/load JSON), main.py (argparse CLI with add/list/done commands).
 Wrote 5 pytest tests covering creation, mark_done, to_dict, from_dict,
 and a full round-trip conversion test — all passing.
+
+## Day 5
+
+Installed Claude Code CLI and logged in with Claude Pro. Ran my first
+real Claude Code session inside todo-app.
+
+Asked Claude Code to explain the project and review main.py - it
+correctly identified real bugs: done command crashed on invalid/
+out-of-range input, no delete command existed.
+
+Fixed the done command's error handling (try/except/else), then
+directed Claude Code to add 3 features: better unknown-command
+message, a delete command, and an edit command. Reviewed every diff
+before approving - traced through Python's reference semantics
+(deleting from a list doesn't destroy the object a variable already
+points to) and confirmed why capturing old values before overwriting
+matters for edit's confirmation message.
