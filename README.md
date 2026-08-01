@@ -59,3 +59,26 @@ before approving - traced through Python's reference semantics
 (deleting from a list doesn't destroy the object a variable already
 points to) and confirmed why capturing old values before overwriting
 matters for edit's confirmation message.
+
+## Day 6
+
+Learned how Claude Code's context window works - every prompt, file
+read, and tool output gets resent every turn, and quality degrades
+as a session gets long and cluttered with unrelated tasks.
+
+Ran a real comparison: asked Claude Code to add a priority field to
+Task after 4 unrelated tangents in one session - got back genuinely
+broken syntax (mismatched quotes/parens). Same exact request in a
+fresh session (after /clear) produced clean, correct code with a
+smart backward-compatibility fallback (.get() instead of direct key
+access).
+
+Practiced /clear (full reset) and /compact (summarize, keep working).
+Learned the habit of writing key decisions into code comments/files
+instead of leaving them only in chat, since conversations can be
+cleared or degrade but files persist. Also learned: after 2 failed
+correction attempts, clear and restate fresh rather than piling on
+more corrections in the same confused session.
+
+Shipped a real feature (task priority: high/medium/low) to the todo
+app, fully tested and committed.
