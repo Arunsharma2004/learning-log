@@ -82,3 +82,22 @@ more corrections in the same confused session.
 
 Shipped a real feature (task priority: high/medium/low) to the todo
 app, fully tested and committed.
+
+## Day 7
+
+Week 1 consolidation. Rebuilt the todo app from scratch by directing
+Claude Code from a plain-English spec instead of writing every line
+myself - reviewed a genuinely different architecture (argparse
+subparsers, per-command functions, @classmethod, __repr__), verified
+new concepts hands-on (tested .pop() vs del, tested JSON corruption
+handling) rather than trusting explanations. Wrote a README with
+Claude Code's help.
+
+Wrote and answered 14 self-quiz questions covering Git, terminal,
+Python, JSON, pytest, and how to review AI code without deep
+programming expertise - including honest discussion on context
+windows, token costs, and the AI-and-jobs question.
+
+**End of Week 1.** Foundation built: terminal fluency, Git branching/
+merging/conflicts, Python fundamentals, and the core discipline of
+reviewing AI-generated code rather than approving it blindly.
