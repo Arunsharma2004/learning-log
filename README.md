@@ -101,3 +101,26 @@ windows, token costs, and the AI-and-jobs question.
 **End of Week 1.** Foundation built: terminal fluency, Git branching/
 merging/conflicts, Python fundamentals, and the core discipline of
 reviewing AI-generated code rather than approving it blindly.
+
+## Day 8
+
+Learned what CLAUDE.md is - a persistent file Claude Code reads at
+the start of every session, giving it project context without
+re-explaining everything each time. Ran /init on todo-app, which
+generated an accurate CLAUDE.md documenting real architectural
+decisions (like why PRIORITIES is a tuple, and the consistent
+try/except/else pattern across done/delete/edit).
+
+Ran the bad-vs-good CLAUDE.md exercise: swapped in a vague, generic
+CLAUDE.md and asked Claude Code to add a clear command, then asked
+about extending the pattern to a hypothetical snooze command. Result
+was surprising - Claude Code still correctly inferred the established
+patterns by reading the actual code directly, even without CLAUDE.md
+spelling it out. It even independently spotted the same code-
+duplication concern the good CLAUDE.md documented.
+
+**Honest takeaway:** CLAUDE.md's value didn't show up dramatically on
+this small, consistent codebase, since Claude Code compensated by
+reading the code itself. The real benefit should become clearer on
+larger, more complex projects in Week 2+ - worth keeping the habit
+even though today's test didn't show a dramatic difference.
