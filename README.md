@@ -124,3 +124,22 @@ this small, consistent codebase, since Claude Code compensated by
 reading the code itself. The real benefit should become clearer on
 larger, more complex projects in Week 2+ - worth keeping the habit
 even though today's test didn't show a dramatic difference.
+
+## Day 9
+
+Learned Claude Code's memory systems. Explored /memory - three types:
+project memory (CLAUDE.md, version-controlled), user memory (global,
+~/.claude/CLAUDE.md), and auto-memory (Claude Code's own notes,
+stored locally outside the project).
+
+Told Claude Code to remember venv activation before pytest, then
+verified a brand-new session correctly recalled it - proving auto-
+memory persists independently of conversation/context history.
+Inspected the actual file (feedback_venv_pytest.md) and found it
+wasn't a raw copy of my instruction - Claude Code expanded it with
+reasoning (why) and broader application (single-test runs too).
+
+Reasoned through why auto-memory alone wasn't enough for this fact
+(machine-local, doesn't travel with git clone) and added the same
+info to CLAUDE.md so it's available to anyone working on the
+project, not just this machine.
