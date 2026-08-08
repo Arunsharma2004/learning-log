@@ -143,3 +143,38 @@ Reasoned through why auto-memory alone wasn't enough for this fact
 (machine-local, doesn't travel with git clone) and added the same
 info to CLAUDE.md so it's available to anyone working on the
 project, not just this machine.
+
+## Day 10
+
+Learned Plan Mode - Claude Code proposes a plan before touching any
+files, letting me review the approach itself, not just the resulting
+diff. Gave it a real refactor task: collapse the duplicated try/except
+pattern across done/delete/edit into a shared resolve_task helper.
+
+Pushed back twice before approving:
+1. Caught that the first version returned an inconsistent type - a
+   tuple on success, implicit None on failure - which would crash
+   with a TypeError if unpacked without a truthiness check first.
+   Verified this hands-on in a Python shell, got it fixed to always
+   return a consistent 2-tuple.
+2. Requested an explicit verification step for index 0 specifically,
+   since 0 is falsy in Python - confirmed the fix correctly uses
+   "is not None" rather than bare truthiness, so index 0 isn't
+   mistaken for failure.
+
+Also learned CLAUDE.md and code can genuinely conflict - Claude Code
+explicitly flagged that my refactor request contradicted CLAUDE.md's
+documented "don't use a shared helper" guidance, and asked how to
+proceed before drafting a plan.
+
+Real-world lesson: a laptop shutdown mid-review lost my in-progress
+critique (conversation-only, not yet in any file) - the next session
+regenerated the same original buggy version, and I had to re-catch
+and re-fix the same bug. Direct proof of why decisions worth keeping
+belong in files, not just conversation.
+
+Also hit a minor real mishap: verification commands overwrote
+tasks.json with test data; Claude Code's backup attempt silently
+failed. Restored via `git checkout -- tasks.json` - original data
+turned out to be safe since it matched the last commit. Good proof
+of why committing regularly matters.
