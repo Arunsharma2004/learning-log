@@ -178,3 +178,45 @@ tasks.json with test data; Claude Code's backup attempt silently
 failed. Restored via `git checkout -- tasks.json` - original data
 turned out to be safe since it matched the last commit. Good proof
 of why committing regularly matters.
+
+## Day 11
+
+Learned @-file references for precise file targeting in Claude Code.
+Ran real vague-vs-specific comparisons: "make the todo app better"
+triggered clarifying questions, while fully-specified prompts for
+search, completed, pending, and priority commands each went straight
+to correct implementations with zero back-and-forth once built.
+
+Wrote 5 more prompt pairs beyond that. Two revealed a genuinely
+important lesson beyond vague-vs-specific: even a well-specified
+prompt can be technically infeasible - end-of-day notifications and
+OS popups don't fit a plain CLI tool with no background process or
+GUI, and a "total tasks in a day" / "defer to next day" pair both
+secretly depended on a date/timestamp field that doesn't exist
+anywhere in the Task class. Good prompting means checking feasibility
+and data-model fit, not just clarity of wording.
+
+Real incident: accidentally ran `clear` on real task data. Discovered
+Git only had old task data committed - tasks.json wasn't being
+tracked after every change. Decided to stop tracking it in Git
+entirely (user data, not source code); hit a .gitignore merge-line
+bug in the process (same category as Day 4's indentation bug). Found
+and fixed a real test gap along the way - test_to_dict wasn't
+checking the priority field, verified by deliberately reproducing
+the AssertionError.
+
+Second incident: Claude Code silently deleted tasks.json again during
+its own test cleanup for the completed command. Pushed back
+explicitly rather than accepting "nothing to fix" - it wrote a new
+auto-memory file acknowledging the repeated pattern and committing to
+ask first going forward. Verified the memory file was genuinely
+written to disk.
+
+Built the priority command last - correctly ranked priority using
+PRIORITIES.index() instead of alphabetical string sort, and relied on
+Python's sorted() stability guarantee to automatically preserve
+insertion order for same-priority tasks, exactly matching the
+tiebreak rule specified in the original prompt. Verified with a
+prediction before running, confirmed correct.
+
+Shipped 4 real features today: search, completed, pending, priority.
