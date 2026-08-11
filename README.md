@@ -220,3 +220,22 @@ tiebreak rule specified in the original prompt. Verified with a
 prediction before running, confirmed correct.
 
 Shipped 4 real features today: search, completed, pending, priority.
+
+## Day 12 (in progress)
+
+Started Project 1: Personal Expense Tracker with FastAPI. Wrote
+CLAUDE.md BEFORE any code existed this time, based on real reasoning
+through the data model (Expense: id, amount, category, date - decided
+against including "budget" since it's a different concept entirely,
+correctly reasoned through why "id" alone guarantees uniqueness where
+category+date could still collide).
+
+Used Plan Mode to review the full architecture before any code was
+written. Learned the models.py vs schemas.py distinction - models.py
+defines how data is physically stored, schemas.py defines what's
+allowed in/out through the API (validation boundary, like rejecting
+negative amounts before they ever reach the database).
+
+Started understanding SQLAlchemy's database setup: engine, sessions,
+Base, and FastAPI's dependency injection pattern (get_db) - still
+mid-review, to be continued.
