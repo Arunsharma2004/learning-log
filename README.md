@@ -221,7 +221,7 @@ prediction before running, confirmed correct.
 
 Shipped 4 real features today: search, completed, pending, priority.
 
-## Day 12-13 (Project 1, Part 1)
+## Day 12 (Project 1, Part 1)
 
 Started Project 1: Personal Expense Tracker with FastAPI. Wrote
 CLAUDE.md BEFORE any code existed, based on real reasoning through
@@ -254,3 +254,32 @@ wildcard pattern), pushed the first real backend project to GitHub.
 First genuinely new category of project - a live server that stays
 running and responds to requests, instead of a CLI tool that runs
 once and exits.
+
+## Day 13 (Project 1, Part 2)
+
+Finished the Expense Tracker. Built a real pytest suite using
+FastAPI's TestClient - learned to distinguish "shape checks" (does
+an error response contain a `detail` key) from "content checks"
+(exact field values), since a rejected request never actually creates
+data to check values against. Hit and fixed a real bug in a test I
+wrote myself - tried to DELETE with an id in a JSON body instead of
+the URL path, corrected after tracing through how the route was
+actually defined.
+
+Resolved a genuine library deprecation warning (httpx -> httpx2 for
+TestClient) - verified it was a real, current issue via search before
+fixing it, rather than ignoring or blindly patching.
+
+Built the monthly summary endpoint - genuinely new territory:
+SQLAlchemy's group_by + func.sum() for real database aggregation,
+FastAPI Query parameters, and reasoned through why group_by naturally
+excludes categories with zero matching expenses (nothing to group)
+rather than showing them as zero. Designed the response shape myself
+first (category -> total, not individual line items) before writing
+the prompt.
+
+Wrote a README with Claude Code's help, verified accuracy against
+everything actually built and tested (same discipline as Day 7).
+
+Project 1 complete: full FastAPI + SQLite backend, validated inputs,
+6 passing tests, aggregation endpoint, documented.
