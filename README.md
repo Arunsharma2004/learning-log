@@ -283,3 +283,46 @@ everything actually built and tested (same discipline as Day 7).
 
 Project 1 complete: full FastAPI + SQLite backend, validated inputs,
 6 passing tests, aggregation endpoint, documented.
+
+## Day 14 (in progress)
+
+Started Week 2 debugging practice on the Expense Tracker. Introduced
+three deliberate bugs and tested Claude Code's diagnosis without
+giving it the answer each time:
+
+1. A typo (get_db -> get_dbb) inside a Depends() default parameter -
+   crashed immediately at server startup, not when the route was
+   called, since default parameter values evaluate at import time.
+   Correctly predicted this before running it. Python's own NameError
+   included a "Did you mean: get_db?" suggestion - a built-in
+   language feature, not something Claude Code added.
+
+2. A subtle boundary bug (changed >= to > in a date filter) - no
+   crash, no error, just a silently wrong result (empty summary for
+   an expense dated exactly the 1st of the month). Gave Claude Code
+   only the symptom, no error message, and it still correctly traced
+   it to the exact comparison operator issue.
+
+3. Changed amount from Float to Integer in models.py, expecting
+   decimal amounts to be rejected. They weren't - the value passed
+   through completely intact. Learned two layered reasons: schemas.py
+   still declared amount as float (validation happens there,
+   independent of the database model), AND SQLite uses "type
+   affinity" rather than strict typing - a column declared INTEGER
+   will still accept a decimal it can't cleanly convert, rather than
+   rejecting it. SQLite-specific behavior; stricter databases like
+   PostgreSQL would likely reject it outright.
+
+Real lesson from bug 2: a 200 OK response doesn't mean correct - it
+just means no exception was thrown. Silent logic bugs are more
+dangerous than crashes precisely because nothing signals something's
+wrong.
+
+Also learned a real Git lesson today: after reverting bug 3 back to
+its original state, `git status` showed "nothing to commit" - not
+because nothing happened, but because the final file content matched
+what was already committed. Verified this with `git diff HEAD` before
+trusting it, rather than assuming something was lost.
+
+To continue tomorrow: 2 more deliberate bugs, CLAUDE.md updates with
+lessons learned, weekly retrospective.
