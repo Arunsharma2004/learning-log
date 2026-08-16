@@ -284,10 +284,10 @@ everything actually built and tested (same discipline as Day 7).
 Project 1 complete: full FastAPI + SQLite backend, validated inputs,
 6 passing tests, aggregation endpoint, documented.
 
-## Day 14 (in progress)
+## Day 14
 
 Started Week 2 debugging practice on the Expense Tracker. Introduced
-three deliberate bugs and tested Claude Code's diagnosis without
+five deliberate bugs and tested Claude Code's diagnosis without
 giving it the answer each time:
 
 1. A typo (get_db -> get_dbb) inside a Depends() default parameter -
@@ -313,16 +313,47 @@ giving it the answer each time:
    rejecting it. SQLite-specific behavior; stricter databases like
    PostgreSQL would likely reject it outright.
 
+4. Removed Depends(get_db) from POST /expenses entirely. Correctly
+   predicted NameError. Discovered it crashed at REQUEST time, not
+   startup - contrasted directly with bug #1's import-time crash.
+   Learned the precise reason: default parameter values evaluate
+   when Python reads the function definition; function body code
+   only runs when the function is actually called.
+
+5. Changed ExpenseOut's id field from int to str. Predicted Pydantic
+   would just convert the integer to a string - wrong. Got a
+   ResponseValidationError instead (500, not 422) - learned the
+   distinction between request validation (ExpenseCreate, 422) and
+   response validation (ExpenseOut, 500) as two separate jobs
+   Pydantic does. Also learned 500 errors hide details from the
+   client for security - the real traceback only shows in server
+   logs, not the API response.
+
 Real lesson from bug 2: a 200 OK response doesn't mean correct - it
 just means no exception was thrown. Silent logic bugs are more
 dangerous than crashes precisely because nothing signals something's
 wrong.
 
-Also learned a real Git lesson today: after reverting bug 3 back to
-its original state, `git status` showed "nothing to commit" - not
+Also learned a real Git lesson: after reverting bug 3 back to its
+original state, `git status` showed "nothing to commit" - not
 because nothing happened, but because the final file content matched
-what was already committed. Verified this with `git diff HEAD` before
-trusting it, rather than assuming something was lost.
+what was already committed (bugs 1 and 2's fixes had already been
+swept into an earlier feature commit, coincidentally). Verified this
+with `git diff HEAD` and `git log` before trusting it, rather than
+assuming something was lost.
 
-To continue tomorrow: 2 more deliberate bugs, CLAUDE.md updates with
-lessons learned, weekly retrospective.
+Updated CLAUDE.md with a "Lessons Learned" section covering all
+three big discoveries: SQLite type affinity vs schemas.py as the
+real enforcement layer, always checking server logs behind a 500,
+and 200 not guaranteeing correctness.
+
+**Week 2 retrospective:** CLAUDE.md and Plan Mode were the most
+significant workflow shifts this week - not just concepts, but real
+changes in how I approach giving Claude Code work. Confirmed my Day 8
+CLAUDE.md experiment conclusion: value shows up through consistent
+updates over time, not necessarily in a single side-by-side test on
+a small project.
+
+**Week 2 complete:** CLAUDE.md, memory systems, Plan Mode, prompting
+discipline, Project 1 (Expense Tracker - FastAPI + SQLite, validated,
+tested, documented), and 5 categories of real bugs diagnosed.
