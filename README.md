@@ -357,3 +357,32 @@ a small project.
 **Week 2 complete:** CLAUDE.md, memory systems, Plan Mode, prompting
 discipline, Project 1 (Expense Tracker - FastAPI + SQLite, validated,
 tested, documented), and 5 categories of real bugs diagnosed.
+
+## Day 15
+
+Learned real Git collaboration workflows, directed through Claude
+Code instead of typing every command myself. Built a genuine feature
+end-to-end on a branch: PUT /expenses/{id} update endpoint, using
+Plan Mode to review the design (decided on a separate ExpenseUpdate
+schema over reusing ExpenseCreate, for future flexibility). Verified
+the update actually persisted with a fresh GET, not just trusted the
+PUT response. All 9 tests passing.
+
+Went through the full real workflow for the first time: branch,
+build, test, commit, push, open a PR on GitHub, review the diff,
+merge, delete the branch, pull the merge down locally. Learned gh
+CLI wasn't installed - Claude Code was transparent about the
+limitation and gave a working manual fallback instead of pretending.
+
+Deliberately created a merge conflict (two branches, same line,
+different comments). Caught a real discrepancy in Claude Code's own
+explanations - it initially described "keeping both comments" but
+its actual resolution dropped both, since they were placeholder text
+with no functional value. Verified this directly against the file
+rather than trusting either description. Real lesson: an AI's
+narrated explanation and its actual action aren't guaranteed to
+match - always verify against ground truth.
+
+Deepened the "isolated snapshots" mental model for branches through
+hands-on repetition - each branch holds its own complete copy of
+file content, only reconciled at merge time.
