@@ -386,3 +386,27 @@ match - always verify against ground truth.
 Deepened the "isolated snapshots" mental model for branches through
 hands-on repetition - each branch holds its own complete copy of
 file content, only reconciled at merge time.
+
+## Day 16 (in progress)
+
+Started Test-Driven Development with the Expense Tracker. Learned
+the Red-Green-Refactor cycle - write a failing test first, then
+implement just enough to pass it, rather than building the feature
+first and testing after.
+
+Designed the Budget model through the same reasoning process as
+Day 12's Expense model: category, amount, month, year (deliberately
+using separate month/year integers instead of a full date, since a
+budget period represents a whole month, not a specific day - matches
+how the /summary endpoint already takes month/year as query params).
+
+Wrote test_create_budget before any Budget code existed at all. Ran
+it and got a real, genuine Red result: 404, not a crash, since
+FastAPI correctly recognized /budgets as an unrecognized route.
+Reviewed Claude Code's implementation plan - notably it explicitly
+scoped itself to ONLY what the one failing test required (no GET/PUT/
+DELETE yet), which is the actual TDD discipline in practice, not just
+theory.
+
+To continue: approve the plan, verify the test goes Green, continue
+the TDD cycle for remaining budget operations.
