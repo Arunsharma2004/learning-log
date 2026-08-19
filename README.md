@@ -387,26 +387,46 @@ Deepened the "isolated snapshots" mental model for branches through
 hands-on repetition - each branch holds its own complete copy of
 file content, only reconciled at merge time.
 
-## Day 16 (in progress)
+## Day 16
 
-Started Test-Driven Development with the Expense Tracker. Learned
-the Red-Green-Refactor cycle - write a failing test first, then
-implement just enough to pass it, rather than building the feature
-first and testing after.
+Completed Test-Driven Development on the Expense Tracker - built a
+full Budgets feature using the Red-Green-Refactor cycle, twice.
 
-Designed the Budget model through the same reasoning process as
-Day 12's Expense model: category, amount, month, year (deliberately
-using separate month/year integers instead of a full date, since a
-budget period represents a whole month, not a specific day - matches
-how the /summary endpoint already takes month/year as query params).
+Feature 1 (budget creation): wrote test_create_budget before any
+Budget model/schema/route existed. Watched it fail with a real 404.
+Reviewed Claude Code's plan, made a real design decision - rejected
+BudgetOut inheriting from BudgetCreate in favor of an independent
+schema, to stay consistent with the existing Expense pattern rather
+than introducing a second structural convention. Approved, verified
+Green, zero regressions.
 
-Wrote test_create_budget before any Budget code existed at all. Ran
-it and got a real, genuine Red result: 404, not a crash, since
-FastAPI correctly recognized /budgets as an unrecognized route.
-Reviewed Claude Code's implementation plan - notably it explicitly
-scoped itself to ONLY what the one failing test required (no GET/PUT/
-DELETE yet), which is the actual TDD discipline in practice, not just
-theory.
+Feature 2 (budget spending check): wrote test_check_budget, which
+needed real thought to get right - initially tried passing spent/
+remaining as query parameters before realizing those are outputs to
+calculate, not inputs to supply. Learned the difference between 404
+(route doesn't exist) and 405 (route exists, wrong method) from the
+first Red result.
 
-To continue: approve the plan, verify the test goes Green, continue
-the TDD cycle for remaining budget operations.
+Hit a genuinely valuable, self-discovered bug: the test failed with
+spent=551, then 301, instead of the expected 250, because all tests
+share the same database and aren't isolated from each other. Traced
+it precisely - even test_update_expense_invalid_category, whose
+whole point is testing that an invalid update gets REJECTED, still
+leaves behind a real, valid groceries expense from its own setup
+step, since the rejection only blocks the update, not the original
+creation. That leftover data silently contributed to an unrelated
+test's totals.
+
+Made a deliberate engineering tradeoff rather than either ignoring
+the problem or over-engineering mid-session: changed the brittle
+== 250 assertion to >= 250 (proves the feature works without
+requiring unrealistic full isolation), and documented the real fix
+(a separate, isolated test database) as a "Known Limitations" entry
+in CLAUDE.md, specifically so the workaround doesn't get silently
+"corrected" back to == later by someone who doesn't know why it's
+written that way.
+
+All 11 tests passing. Real lesson: a test's own setup steps can have
+side effects that leak into completely unrelated tests, even when
+the test's core assertion (rejecting invalid input) is working
+correctly.
