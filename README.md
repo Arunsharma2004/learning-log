@@ -464,6 +464,3 @@ ran httpie for real (pip install -e ., http GET https://httpbin.org/get)
 "specialized, swappable authentication strategies chosen explicitly
 via -A flag" before diving back into architecture.
 
-To continue: verify the -A basic auth mechanism works as described,
-explore full-stack-fastapi-template, write 1-page architecture
-summaries for both.
