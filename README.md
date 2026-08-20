@@ -430,3 +430,40 @@ All 11 tests passing. Real lesson: a test's own setup steps can have
 side effects that leak into completely unrelated tests, even when
 the test's core assertion (rejecting invalid input) is working
 correctly.
+
+## Day 17 (in progress)
+
+Started exploring unfamiliar codebases - cloned httpie and
+full-stack-fastapi-template. Focused on httpie first.
+
+Used Claude Code to get an architecture summary, then practiced
+verifying specific, checkable claims rather than trusting the whole
+explanation at face value - confirmed httpie.__main__.py genuinely
+calls core.main(), confirmed all four plugin base classes
+(AuthPlugin, TransportPlugin, ConverterPlugin, FormatterPlugin)
+genuinely exist in base.py.
+
+Hit a genuinely valuable discrepancy: searched for a cited function
+(_process_auth) in the wrong file based on garbled/truncated text,
+found nothing, and initially suspected Claude Code had hallucinated
+the claim. Traced it back carefully and discovered the real cause -
+the original explanation was truncated during copy/paste, and I
+(with help) filled the gap with an incorrect guess about which file
+it was in. The actual claim was correct all along, just misattributed
+due to truncation, not an AI error. Verified the real location
+directly with Select-String before accepting either explanation.
+
+Real lesson: verification catches problems, but you also have to
+verify the RIGHT thing - a wrong conclusion can come from a human's
+assumption filling a gap, not just from AI error.
+
+Pulled back after realizing verification alone wasn't building actual
+understanding of WHAT the tool does or WHY. Actually installed and
+ran httpie for real (pip install -e ., http GET https://httpbin.org/get)
+- built real, hands-on understanding of the plugin system as
+"specialized, swappable authentication strategies chosen explicitly
+via -A flag" before diving back into architecture.
+
+To continue: verify the -A basic auth mechanism works as described,
+explore full-stack-fastapi-template, write 1-page architecture
+summaries for both.
