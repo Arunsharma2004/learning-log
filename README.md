@@ -431,36 +431,32 @@ side effects that leak into completely unrelated tests, even when
 the test's core assertion (rejecting invalid input) is working
 correctly.
 
-## Day 17 (in progress)
+## Day 17
 
-Started exploring unfamiliar codebases - cloned httpie and
-full-stack-fastapi-template. Focused on httpie first.
+Explored two real open-source Python projects with Claude Code:
+httpie (CLI HTTP client) and full-stack-fastapi-template (FastAPI +
+SQLModel).
 
-Used Claude Code to get an architecture summary, then practiced
-verifying specific, checkable claims rather than trusting the whole
-explanation at face value - confirmed httpie.__main__.py genuinely
-calls core.main(), confirmed all four plugin base classes
-(AuthPlugin, TransportPlugin, ConverterPlugin, FormatterPlugin)
-genuinely exist in base.py.
+Practiced verifying AI explanations of unfamiliar code rather than
+trusting them outright - checked specific claims against real files
+(entry points, class names, function locations). Traced one
+discrepancy back to truncated text being misread, not an actual AI
+error. Installed and ran httpie hands-on to test the plugin/auth
+system for real, not just read about it.
 
-Hit a genuinely valuable discrepancy: searched for a cited function
-(_process_auth) in the wrong file based on garbled/truncated text,
-found nothing, and initially suspected Claude Code had hallucinated
-the claim. Traced it back carefully and discovered the real cause -
-the original explanation was truncated during copy/paste, and I
-(with help) filled the gap with an incorrect guess about which file
-it was in. The actual claim was correct all along, just misattributed
-due to truncation, not an AI error. Verified the real location
-directly with Select-String before accepting either explanation.
+In the FastAPI template, compared its unified SQLModel inheritance
+pattern against my own project's independent schemas, and reasoned
+through why both are valid choices depending on project maturity.
+Found a genuinely useful pattern (SessionDep dependency aliases) and
+documented it in my own project's CLAUDE.md. Also found a real
+inconsistency - a crud.py function that's defined but never actually
+called.
 
-Real lesson: verification catches problems, but you also have to
-verify the RIGHT thing - a wrong conclusion can come from a human's
-assumption filling a gap, not just from AI error.
+Biggest discovery: Claude Code flagged old-style exception syntax as
+a bug. Disproved it through direct testing, then found the real
+explanation - Python 3.14 made that exact syntax valid very recently
+(PEP 758). Outdated AI knowledge, not a hallucination - a real lesson
+in why verification matters even for confident, specific claims.
 
-Pulled back after realizing verification alone wasn't building actual
-understanding of WHAT the tool does or WHY. Actually installed and
-ran httpie for real (pip install -e ., http GET https://httpbin.org/get)
-- built real, hands-on understanding of the plugin system as
-"specialized, swappable authentication strategies chosen explicitly
-via -A flag" before diving back into architecture.
-
+Wrote two 1-page architecture summaries in day17-architecture-
+summaries/, reflecting only what was actually verified.
