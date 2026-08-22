@@ -460,3 +460,5 @@ in why verification matters even for confident, specific claims.
 
 Wrote two 1-page architecture summaries in day17-architecture-
 summaries/, reflecting only what was actually verified.
+
+## Day 18
