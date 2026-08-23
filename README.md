@@ -462,3 +462,33 @@ Wrote two 1-page architecture summaries in day17-architecture-
 summaries/, reflecting only what was actually verified.
 
 ## Day 18
+
+Set up ruff on the Expense Tracker. Found 7 warnings about Depends()
+in default arguments (B008) - investigated whether this was a real
+issue or a FastAPI-specific exception, confirmed it's the standard,
+correct FastAPI pattern, and configured a documented ignore in
+pyproject.toml rather than either blindly "fixing" working code or
+silently dismissing the warning forever.
+
+Added return type hints to all 7 routes. Worked through why this
+isn't redundant with response_model - the type hint describes what
+the Python function itself returns (the SQLAlchemy model), while
+response_model governs the separate, runtime conversion FastAPI does
+before sending the actual HTTP response. Two different checks, at
+two different times, for two different audiences.
+
+Extracted two genuine duplications (month_bounds for date-range
+calculation, get_expense_or_404 for the lookup-or-404 pattern) -
+same category as Day 10's resolve_task extraction. Correctly left a
+third candidate (the add/commit/refresh pattern) unextracted, since
+Claude Code's own reasoning was sound: too small and too standard to
+benefit from a generic helper.
+
+Documented a standing quality gate in CLAUDE.md - run ruff and pytest
+after every future change, rather than relying on remembering to ask
+each time.
+
+Also caught a real, stale claim earlier this week: asked Claude Code
+for a general health check, and it correctly flagged that CLAUDE.md's
+Overview still said "not budgets" despite the feature existing since
+Day 16. Verified the claim directly before fixing it.
