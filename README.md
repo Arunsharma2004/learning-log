@@ -492,3 +492,13 @@ Also caught a real, stale claim earlier this week: asked Claude Code
 for a general health check, and it correctly flagged that CLAUDE.md's
 Overview still said "not budgets" despite the feature existing since
 Day 16. Verified the claim directly before fixing it.
+
+Did a final naming review, closing the last gap in today's roadmap
+goal. Fixed two real parameter-order inconsistencies (get_expense_or_404,
+month_bounds) that could have caused a silent swap bug later. Declined
+one suggestion (renaming BudgetStatus to BudgetStatusOut) after real
+reasoning - the *Out suffix currently signals "mirrors a stored
+database row," and BudgetStatus is a computed result, not a row echo;
+forcing uniform naming would have erased that real distinction. Added
+a comment explaining the exception instead of either blindly renaming
+or leaving it unexplained.
