@@ -502,3 +502,5 @@ database row," and BudgetStatus is a computed result, not a row echo;
 forcing uniform naming would have erased that real distinction. Added
 a comment explaining the exception instead of either blindly renaming
 or leaving it unexplained.
+
+## Day 19
