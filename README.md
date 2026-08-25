@@ -504,3 +504,31 @@ a comment explaining the exception instead of either blindly renaming
 or leaving it unexplained.
 
 ## Day 19
+
+Started Project 2: URL Shortener (FastAPI + SQLite). Reasoned through
+the data model from scratch - Link(id, original_url, short_code,
+click_count). Considered richer per-click timestamp tracking (a
+separate Click table) but deliberately deferred it as a documented
+future enhancement, keeping today's scope realistic. Wrote CLAUDE.md
+before any code.
+
+Used Plan Mode for the backend architecture. Worked through two
+genuinely new concepts: why short_code uniqueness needs both a
+Python-level pre-check AND a database unique constraint (a race
+condition where two near-simultaneous requests could both pass the
+check before either save completes - understood via a movie-seat
+double-booking analogy), and why the redirect uses 307 instead of
+301/308 (307 prevents browser caching, ensuring every visit actually
+reaches the server and gets counted - a cached redirect would
+silently undercount clicks).
+
+Found a genuinely interesting real behavior while testing: /docs'
+"Try it out" button showed a CORS/fetch error on the redirect route,
+but the request still reached the server and incremented click_count
+- confirmed by checking stats before/after. Real lesson: a request
+failing from the client's perspective (couldn't process the response)
+doesn't mean it failed on the server - the actual work still happened.
+
+Verified all error cases: 404 for nonexistent short codes on both the
+stats and redirect routes, 422 for an invalid URL on /shorten. Pushed
+to GitHub (github.com/Arunsharma2004/url-shortener).
