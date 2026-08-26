@@ -532,3 +532,35 @@ doesn't mean it failed on the server - the actual work still happened.
 Verified all error cases: 404 for nonexistent short codes on both the
 stats and redirect routes, 422 for an invalid URL on /shorten. Pushed
 to GitHub (github.com/Arunsharma2004/url-shortener).
+
+## Day 20
+
+Built the URL shortener's frontend - a single HTML/JS file with a
+form, copy-to-clipboard, and friendly inline error handling (no
+alert() popups, no raw status codes shown to users). Had to add CORS
+middleware to the backend, since index.html (opened via file://) and
+the API (http://127.0.0.1:8000) count as different origins.
+
+Traced the full request flow end-to-end from click to database and
+back, and clarified a genuinely important distinction from Day 19's
+CORS discovery: that issue was about a redirect response being
+blocked; today's was about the initial request itself needing
+permission to reach the server at all - same guard (CORS), two
+different trigger points.
+
+Verified all four cases thoroughly: golden path (real short URL,
+working copy button), empty input (caught client-side, zero network
+calls - confirmed via the Network tab), invalid URL (real 422 from
+the server, translated into a friendly message), and server-down
+(network failure caught with a generic fallback).
+
+Implemented rate limiting on /shorten (5/minute per IP) using slowapi.
+Reasoned through why only /shorten needed protection, not the redirect
+route - /shorten creates unbounded new database rows, while the
+redirect only increments click_count on an already-existing row, so
+it doesn't carry the same growth risk. Documented this reasoning in
+CLAUDE.md as a Future Enhancement note rather than applying rate
+limiting uniformly everywhere. Verified with real testing: 5 requests
+succeeded, the 6th correctly returned 429.
+
+Remaining for Day 20: tests, README, Dockerfile.
