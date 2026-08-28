@@ -544,23 +544,47 @@ the API (http://127.0.0.1:8000) count as different origins.
 Traced the full request flow end-to-end from click to database and
 back, and clarified a genuinely important distinction from Day 19's
 CORS discovery: that issue was about a redirect response being
-blocked; today's was about the initial request itself needing
+blocked; this one was about the initial request itself needing
 permission to reach the server at all - same guard (CORS), two
 different trigger points.
 
-Verified all four cases thoroughly: golden path (real short URL,
-working copy button), empty input (caught client-side, zero network
-calls - confirmed via the Network tab), invalid URL (real 422 from
-the server, translated into a friendly message), and server-down
-(network failure caught with a generic fallback).
+Verified all four frontend cases thoroughly: golden path (real short
+URL, working copy button), empty input (caught client-side, zero
+network calls - confirmed via the Network tab), invalid URL (real 422
+translated into a friendly message), and server-down (network failure
+caught with a generic fallback).
 
 Implemented rate limiting on /shorten (5/minute per IP) using slowapi.
 Reasoned through why only /shorten needed protection, not the redirect
 route - /shorten creates unbounded new database rows, while the
-redirect only increments click_count on an already-existing row, so
-it doesn't carry the same growth risk. Documented this reasoning in
-CLAUDE.md as a Future Enhancement note rather than applying rate
-limiting uniformly everywhere. Verified with real testing: 5 requests
-succeeded, the 6th correctly returned 429.
+redirect only increments click_count on an existing row, so it
+doesn't carry the same growth risk. Documented this in CLAUDE.md
+rather than applying rate limiting uniformly. Verified with real
+testing: 5 requests succeeded, the 6th correctly returned 429.
 
-Remaining for Day 20: tests, README, Dockerfile.
+Wrote a pytest suite using a fresh in-memory database per test - the
+proper fix for the test isolation problem discovered on Day 16,
+naturally available here since this is a new project. All 6 tests
+passed on the first run.
+
+Wrote and verified the README against the actual code and CLAUDE.md
+reasoning, rather than trusting it blindly.
+
+Installed Docker Desktop for the first time (needed WSL2 - CPU
+virtualization was already on, but WSL2 itself wasn't installed).
+Wrote a Dockerfile and .dockerignore, understood layer caching (why
+requirements.txt is copied and installed before the rest of the code)
+and why the Dockerfile/.dockerignore themselves are excluded from the
+final image despite Docker needing to read them to build it.
+
+Built and ran the actual container, verified all three routes worked
+correctly inside it. Hit a confusing moment testing the redirect route
+through /docs - misread a generic CORS error message as an
+instruction to add http:// to the short_code field, which caused a
+real, separate 404. Traced it back to the actual, expected Day 19
+quirk (fetch() blocking cross-origin redirects) once tested correctly
+via direct browser navigation.
+
+Project 2 (URL Shortener) is now complete: backend, frontend, rate
+limiting, tests, README, and a working, verified Dockerfile - all
+pushed to GitHub.
