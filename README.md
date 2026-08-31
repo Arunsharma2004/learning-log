@@ -589,4 +589,26 @@ Project 2 (URL Shortener) is now complete: backend, frontend, rate
 limiting, tests, README, and a working, verified Dockerfile - all
 pushed to GitHub.
 
-## Day 21 
+## Day 21 (in progress)
+
+Started Week 3 Review - reading through both projects with fresh eyes,
+as a reviewer would rather than as the author.
+
+expense-tracker: reviewed main.py, models.py, schemas.py, database.py.
+Held up well - the Day 18 refactoring pass (naming, type hints,
+extracted duplication) genuinely paid off. One idea considered
+(a comment explaining what ORM means) and deliberately declined - a
+reviewer reading route logic is focused on business logic, not
+framework fundamentals that are reasonably assumed knowledge.
+
+url-shortener: reviewing main.py now. Walked through the slowapi
+setup (Limiter creation, attaching to app.state, exception handler
+registration) and the CORSMiddleware settings line by line -
+clarified that allow_methods and allow_headers are separate CORS
+checks from allow_origins, each permitting a different dimension of
+a cross-origin request (which HTTP verbs, which custom headers),
+not just "which websites."
+
+To continue: finish main.py, then crud.py, models.py, schemas.py,
+database.py. Then have Claude Code review its own earlier code with
+fresh context and compare against my own findings.
