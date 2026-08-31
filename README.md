@@ -588,3 +588,5 @@ via direct browser navigation.
 Project 2 (URL Shortener) is now complete: backend, frontend, rate
 limiting, tests, README, and a working, verified Dockerfile - all
 pushed to GitHub.
+
+## Day 21 
