@@ -589,26 +589,40 @@ Project 2 (URL Shortener) is now complete: backend, frontend, rate
 limiting, tests, README, and a working, verified Dockerfile - all
 pushed to GitHub.
 
-## Day 21 (in progress)
+## Day 21 — Week 3 Review
 
-Started Week 3 Review - reading through both projects with fresh eyes,
-as a reviewer would rather than as the author.
+Reviewed both projects line-by-line as a critical reader, not the
+author. expense-tracker held up cleanly (Day 18's refactoring pass
+clearly paid off) - one idea considered and reasonably declined.
+url-shortener also held up well across all 5 files - one small
+duplication noticed (404-lookup pattern) but correctly judged too
+minor to extract, consistent with Day 18's own standard.
 
-expense-tracker: reviewed main.py, models.py, schemas.py, database.py.
-Held up well - the Day 18 refactoring pass (naming, type hints,
-extracted duplication) genuinely paid off. One idea considered
-(a comment explaining what ORM means) and deliberately declined - a
-reviewer reading route logic is focused on business logic, not
-framework fundamentals that are reasonably assumed knowledge.
+Had Claude Code review expense-tracker with fresh context and
+compared its findings against my own. It found something my own
+review missed entirely: nothing prevented duplicate Budget rows for
+the same category/month/year - confirmed real by checking my own
+test file, which had unintentionally been creating exactly this
+duplicate. Fixed it properly with a UniqueConstraint plus a 409
+response on conflict, using a catch-IntegrityError approach (rather
+than a pre-check) specifically to stay race-safe - the same
+uniqueness principle from Day 19's short_code design, now applied
+here. Added DELETE /budgets/{id} and fixed a CWD-relative database
+path bug along the way. Documented remaining lower-priority findings
+(float currency precision, some style inconsistencies) rather than
+fixing everything today.
 
-url-shortener: reviewing main.py now. Walked through the slowapi
-setup (Limiter creation, attaching to app.state, exception handler
-registration) and the CORSMiddleware settings line by line -
-clarified that allow_methods and allow_headers are separate CORS
-checks from allow_origins, each permitting a different dimension of
-a cross-origin request (which HTTP verbs, which custom headers),
-not just "which websites."
+Real lesson: even careful, disciplined self-review has a blind spot -
+when you already know how a system is "supposed" to be used, it's
+easy to unconsciously assume it always will be. A fresh-context
+review isn't better than self-review, but it catches different
+things.
 
-To continue: finish main.py, then crud.py, models.py, schemas.py,
-database.py. Then have Claude Code review its own earlier code with
-fresh context and compare against my own findings.
+## Week 3 Retrospective
+
+Days 15-21 covered Git workflows, TDD, unfamiliar codebase
+exploration, refactoring, a full second project (backend, frontend,
+rate limiting, tests, README, Docker), and finally a critical review
+pass. Biggest shift this week: moving from mostly building new things
+to critically evaluating existing, working code - and discovering
+that "it works" and "it's correct" aren't always the same thing.
