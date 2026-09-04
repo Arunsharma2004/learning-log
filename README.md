@@ -626,3 +626,50 @@ rate limiting, tests, README, Docker), and finally a critical review
 pass. Biggest shift this week: moving from mostly building new things
 to critically evaluating existing, working code - and discovering
 that "it works" and "it's correct" aren't always the same thing.
+
+## Day 22 — Custom Slash Commands
+
+Built three custom slash commands in .claude/commands/ for
+url-shortener: /review, /test-fix, /document. Hit a real early
+lesson - the first attempt to create review.md silently failed to
+save (opened in VS Code, content never actually persisted); verified
+this properly with a full-drive file search before recreating it
+correctly, confirming via `dir` and `/help` each time from then on.
+
+/review surfaced genuinely valuable findings, leading to real fixes:
+- click_count race condition: the old code read a value into Python,
+  incremented it, then saved - two concurrent visits could both read
+  the same stale value and one increment would be silently lost.
+  Fixed with an atomic database-level UPDATE instead, directly
+  connected to CLAUDE.md's own documented decision to leave the
+  redirect route unprotected by rate limiting (exactly the scenario
+  where this bug would matter most).
+- .gitignore was silently broken - saved in UTF-16 encoding instead
+  of UTF-8, so Git couldn't read its rules at all. Traced this
+  through several dead ends (encoding fixes that didn't work due to
+  BOM markers) before Claude Code's diagnosis revealed the real,
+  two-part cause: bad encoding originally let files get tracked, and
+  once tracked, .gitignore has zero effect regardless of being fixed
+  - required an explicit git rm --cached to actually untrack them.
+- Short-code generation had a check-then-insert race condition that
+  could crash with a raw 500 on a rare collision - fixed with a
+  retry loop catching IntegrityError, verified with a monkeypatched
+  test that deterministically forces the collision.
+- URL validation accepted any scheme (javascript:, file://, etc.) -
+  restricted to http/https only using Pydantic's HttpUrl.
+
+Spent real time hardening /test-fix and /document before trusting
+them with any autonomous power - specifically requiring an explicit
+approval step before any code changes, and explicitly forbidding
+weakening or skipping a test just to make it pass, which are two
+genuinely different ways a "fix" could quietly hide a real problem
+instead of solving it. Tested both commands for real: /test-fix
+correctly reported all 12 tests passing without inventing anything;
+/document added docstrings only where genuinely non-obvious (retry
+logic, atomic updates, the 307-not-301 reasoning) and correctly
+skipped self-explanatory functions, plus caught one real README
+inaccuracy from today's URL-scheme fix.
+
+All fixes verified and committed. A genuinely dense, high-value day -
+found and properly fixed four real, distinct bugs through one
+reusable tool.
