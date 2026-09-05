@@ -673,3 +673,16 @@ inaccuracy from today's URL-scheme fix.
 All fixes verified and committed. A genuinely dense, high-value day -
 found and properly fixed four real, distinct bugs through one
 reusable tool.
+
+## Day 23 (in progress)
+
+Started Hooks. Clarified the distinction between the two types before
+building anything: pre-hooks can block/prevent an action entirely
+(today's exercise - block a commit if tests fail), while post-hooks
+just automatically run a follow-up step after something already
+happened (e.g. automatically running ruff + pytest after every edit,
+turning the standing CLAUDE.md instruction from Day 18 into something
+enforced rather than just a reminder).
+
+To build: a post-edit hook (ruff + pytest), a pre-commit validation
+hook, and specifically a hook that blocks commits when tests fail.
