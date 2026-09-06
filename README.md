@@ -674,15 +674,42 @@ All fixes verified and committed. A genuinely dense, high-value day -
 found and properly fixed four real, distinct bugs through one
 reusable tool.
 
-## Day 23 (in progress)
+## Day 23 — Hooks
 
-Started Hooks. Clarified the distinction between the two types before
-building anything: pre-hooks can block/prevent an action entirely
-(today's exercise - block a commit if tests fail), while post-hooks
-just automatically run a follow-up step after something already
-happened (e.g. automatically running ruff + pytest after every edit,
-turning the standing CLAUDE.md instruction from Day 18 into something
-enforced rather than just a reminder).
+Learned the core distinction before building anything: pre-hooks can
+block/prevent an action entirely, post-hooks automatically run a
+follow-up after something already happened. Corrected an early
+mistake - confidently stated hooks live in a JSON config without
+having verified it; caught this, searched real documentation, and
+confirmed the actual mechanism (PostToolUse/PreToolUse events,
+configured via /hooks or settings.json).
 
-To build: a post-edit hook (ruff + pytest), a pre-commit validation
-hook, and specifically a hook that blocks commits when tests fail.
+Built a PostToolUse hook (via /hooks, in settings.local.json rather
+than the shared settings.json - deliberately kept personal/reviewable
+for a solo project rather than auto-published to anyone who clones
+the repo) that runs ruff + pytest automatically after any .py edit,
+and blocks with the failure output if either fails. Setup surfaced
+real, pre-existing issues - unsorted imports and the same B008
+(Depends-in-defaults) situation already solved in expense-tracker -
+fixed both the same way: import fix applied directly, B008 documented
+as an intentional ruff exception in pyproject.toml and CLAUDE.md.
+
+Built a real Git pre-commit hook (.git/hooks/pre-commit, not the
+.sample template) that runs pytest before any commit, blocking on
+failure. Reasoned through why this needed to be a native Git hook
+rather than a Claude-Code-only one - most commits happen by typing
+git commit manually, not through Claude Code, so a Claude-only hook
+would miss the majority of real usage. Verified it for real: added a
+deliberately failing test, confirmed the hook blocked and showed the
+full output, confirmed the test file was properly restored afterward,
+and re-ran the full suite to confirm nothing was left behind.
+
+Learned a genuinely important security principle: Git deliberately
+never tracks .git/hooks/, specifically to prevent a cloned repository
+from silently executing arbitrary code just from someone running git
+clone - forcing hooks to be a deliberate, manual, reviewed setup
+rather than something automatically inherited.
+
+Both hooks turn standing habits (Day 18's "run ruff + pytest after
+every change") into enforced behavior rather than a reminder that
+relies on memory.
