@@ -713,3 +713,45 @@ rather than something automatically inherited.
 Both hooks turn standing habits (Day 18's "run ruff + pytest after
 every change") into enforced behavior rather than a reminder that
 relies on memory.
+
+## Day 24 — Subagents
+
+Learned the core value of subagents by connecting it directly to
+Day 21's real experience: a session too close to code it just wrote
+carries the same assumptions forward, while a genuinely isolated
+context tends to catch different things.
+
+Built two subagents in .claude/agents/: code-reviewer (explicitly
+instructed to look for missing guardrails and edge cases, not just
+style - directly encoding the Day 21 lesson) and test-engineer (both
+running/analyzing existing tests and identifying genuine coverage
+gaps).
+
+Delegated to code-reviewer on url-shortener and got a genuinely
+serious result: a real, exploitable open redirect vulnerability - the
+URL validator only checked the scheme (http/https), not the
+destination, so links could be crafted to point at loopback addresses,
+private IPs, cloud metadata endpoints (169.254.169.254), or use the
+trusted.com@evil.com userinfo trick to look legitimate while
+redirecting elsewhere. Fixed it properly - rejecting internal/private/
+loopback hosts and userinfo URLs - while explicitly scoping out DNS
+rebinding as a documented, deliberate non-goal. Verified with 30
+tests covering every attack pattern plus legitimate edge cases.
+
+Documented six lower-priority findings (rate limiter behind a proxy,
+no SQLite busy timeout, retry exhaustion error handling, bot click
+inflation, spoofable Host header, a README inaccuracy) as known
+limitations rather than fixing everything in one sitting.
+
+Delegated to test-engineer next session: grew the test suite from 12
+to 43 tests - real edge cases (empty/wrong-type input, case-sensitive
+short codes, exact data round-tripping, stats not incrementing
+clicks) plus two deliberate "pinning" tests that honestly document
+currently-known-imperfect behavior (retry exhaustion, the spoofable
+Host header) rather than hiding them - a genuinely good pattern,
+enforcing known limitations as running tests instead of just written
+notes.
+
+Both agents proved the same core point in one exercise: delegating
+specialized work to a dedicated, fresh-context subagent surfaces real
+things a general, already-busy main session is likely to miss.
