@@ -755,3 +755,36 @@ notes.
 Both agents proved the same core point in one exercise: delegating
 specialized work to a dedicated, fresh-context subagent surfaces real
 things a general, already-busy main session is likely to miss.
+
+## Day 25 — MCP (Consumer Side)
+
+Started with the theory: MCP lets Claude Code connect directly to
+external tools/services with structured data, rather than only
+running generic shell commands and parsing text output. Connected
+this directly to a real, remembered frustration - the Day 15
+merge-conflict confusion caused by an unnoticed direct edit on
+GitHub's website - as a concrete example of the gap MCP closes.
+
+Discovered a genuinely important, current fact through research
+rather than assumption: Claude Code's GitHub integration deprecated
+the separate GitHub MCP server setup as of August 2026, in favor of
+using the gh CLI directly and natively. Installed and authenticated
+gh (via winget) instead of setting up something already deprecated.
+
+Practiced the actual exercise on a real, live open-source project
+(fastapi/fastapi), since my own repos have no real issues/PRs to
+review yet. Fetched real issues and PRs through Claude Code, then
+did a genuine, deep review of PR #15388 - a thread pool exhaustion
+deadlock fix in FastAPI's dependency teardown handling. Pushed for
+and got a properly technical explanation (not just analogy): sync
+setup and teardown work shared one bounded thread pool; under load,
+all threads could end up blocked on setup, starving teardown, so
+resources released via teardown never became available - a genuine
+deadlock. Fixed via a separate, dedicated anyio.CapacityLimiter for
+teardown, isolating it from setup contention entirely.
+
+Started connecting a database MCP server to expense-tracker
+(Project 1, per the roadmap) using the official
+@modelcontextprotocol/server-sqlite package - configuration added
+successfully via claude mcp add, but the connection is currently
+failing. Diagnosis in progress, to be continued next session.
