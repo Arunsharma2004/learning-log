@@ -799,3 +799,31 @@ duplicate rows (harmless leftover test data), demonstrating real
 value beyond just "it connects."
 
 Also installed gh and uv for the first time today, both via winget.
+
+## Day 26 — MCP Builder Side
+
+Flipped roles from yesterday: instead of connecting to MCP servers
+others built, built my own from scratch - a notes server (add_note,
+list_notes, search_notes), storing data in a local JSON file, same
+read-modify-write pattern as Day 4's original todo-app.
+
+Registered it with Claude Code (claude mcp add) and confirmed it
+worked completely naturally - no special syntax needed, just plain
+prompts like "add a note saying X," which Claude Code automatically
+matched to the right tool based on its description. Verified all
+three tools genuinely worked by checking notes.json directly on disk,
+not just trusting the reported response.
+
+Hit the exact same .gitignore UTF-16 encoding bug from Day 24, in a
+brand new project - recognized the symptom immediately (files showing
+as untracked despite being listed in .gitignore) and fixed it with
+the same proven method (writing the file via .NET's UTF8Encoding with
+no BOM) without needing to re-diagnose from scratch. Real evidence
+the lesson actually transferred, not just got documented.
+
+Pushed the completed project to GitHub with a concise README.
+
+Confirmed intent to build a second, project-specific MCP server next
+(connected to expense-tracker's own budget/summary logic) - a
+genuinely more meaningful exercise than a generic demo, planned as
+deliberate next work rather than rushed into today.
