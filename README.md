@@ -827,3 +827,33 @@ Confirmed intent to build a second, project-specific MCP server next
 (connected to expense-tracker's own budget/summary logic) - a
 genuinely more meaningful exercise than a generic demo, planned as
 deliberate next work rather than rushed into today.
+
+Completed the "still owed" expense-tracker MCP server. Deliberately
+chose to have it call the REAL API endpoints rather than query the
+database directly - reasoned through this properly: querying the
+database directly would mean rebuilding check_budget's actual
+calculation logic (date ranges, summing, remaining) in a second,
+separate place, risking two implementations quietly disagreeing -
+directly against the Day 18 principle of having one source of truth
+for shared logic. Reusing the real, already-tested API avoided that
+risk entirely.
+
+Hit the exact same wrong-Python-interpreter problem as Day 20's
+slowapi and Day 24's pytest mix-ups - the MCP config used the bare
+"python" command, which resolved to a different, global interpreter
+missing the packages actually installed in the project's own venv.
+Fixed by pointing directly at the venv's specific python.exe.
+
+Proactively avoided the recurring .gitignore UTF-16 encoding bug this
+time by using the proven UTF8Encoding fix from the very start, rather
+than hitting it a third time and fixing it after the fact - genuine
+evidence the pattern is now fully internalized, not just remembered
+when reminded.
+
+Verified all three tools (list_expenses, check_budget, get_summary)
+against the real, running expense-tracker API, cross-checked the
+results against yesterday's SQLite MCP data (same duplicate rows
+showed up consistently across both approaches). Pushed to GitHub.
+
+Day 26 now genuinely complete: two working, tested, documented MCP
+servers built from scratch.
