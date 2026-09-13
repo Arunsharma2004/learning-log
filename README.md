@@ -858,4 +858,34 @@ showed up consistently across both approaches). Pushed to GitHub.
 Day 26 now genuinely complete: two working, tested, documented MCP
 servers built from scratch.
 
-## Day - 27
+## Day 27-28 — Project 3: Automated Code-Review Pipeline
+
+Built /review-pr, a command that orchestrates everything from Weeks
+3-4 into one integrated system: loads CLAUDE.md for project context,
+fetches a real PR's diff via gh, delegates to code-reviewer and
+test-engineer subagents in parallel, then synthesizes both reports
+into one summary.
+
+Tested it on a real, meaningful PR - expense-tracker's own PR #1 from
+Day 15. Result was genuinely strong: both subagents independently
+flagged the same test coverage gap (convergent evidence it matters),
+the code-reviewer correctly distinguished a real but low-priority
+race condition from something that only looked outdated (a missing
+type hint that actually matched the code's contemporaneous style),
+and running the pipeline surfaced a real, live instance of the
+already-documented shared-test-database problem - proving the known
+limitation still occasionally bites, and that deleting expenses.db
+was the correct, necessary fix, not an arbitrary action.
+
+Extended both hooks (PostToolUse lint/test, git pre-commit) into
+expense-tracker too, since they'd only existed in url-shortener until
+today. Testing the pre-commit hook live surfaced the exact shared-
+database problem twice in one session - a genuinely good, first-hand
+demonstration of why url-shortener's isolated in-memory test database
+approach is the better design, learned by hitting the actual friction
+rather than just reading about it.
+
+Documented the whole pipeline with a real flowchart diagram (command
+-> load context -> fetch diff -> parallel subagent review -> 
+synthesis) plus a written PIPELINE.md, and pushed everything as a
+genuine portfolio piece.
