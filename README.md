@@ -889,3 +889,5 @@ Documented the whole pipeline with a real flowchart diagram (command
 -> load context -> fetch diff -> parallel subagent review -> 
 synthesis) plus a written PIPELINE.md, and pushed everything as a
 genuine portfolio piece.
+
+## Day 29
