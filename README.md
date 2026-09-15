@@ -890,4 +890,41 @@ Documented the whole pipeline with a real flowchart diagram (command
 synthesis) plus a written PIPELINE.md, and pushed everything as a
 genuine portfolio piece.
 
-## Day 29
+## Day 29 — Claude API Fundamentals
+
+Learned the Messages API by connecting each concept to something
+already directly experienced this whole course, rather than treating
+it as brand new theory:
+
+- The three required fields (model, messages, max_tokens) - max_tokens
+  specifically is a hard, required ceiling, not "when Claude naturally
+  stops."
+- Tokens as the actual unit conversations are measured and billed in
+  (~4 chars each) - directly the same unit behind Day 6's "context
+  window" concept, which suddenly made much more literal sense.
+- Why messages must be a LIST, not a string - Claude has no memory
+  between calls, so the entire conversation history gets manually
+  resent every time. Realized this is literally what's been happening
+  in this exact learning conversation the whole course, not just a
+  similar concept.
+- system prompts as a separate, higher-priority instruction (the
+  permanent "role," distinct from the back-and-forth messages) -
+  directly connected to this course's own opening instructions.
+- Tool use as the real mechanism behind every "Do you want to
+  proceed?" prompt seen throughout the course - Claude requests a
+  tool call, the calling program actually executes it and sends the
+  real result back.
+
+Built summarizer.py with a correct system/messages split (instruction
+in system, raw content only in messages, no duplication). Discovered
+the API requires paid credits with no free tier - decided not to
+spend money, and completed the exercise by writing and understanding
+a fully correct, ready-to-run script rather than a live test.
+
+Biggest realization: had been assuming Claude Code was itself the
+core intelligence. Actually separated three distinct layers clearly
+for the first time - Claude (the actual model) as the intelligence,
+the Messages API as the communication mechanism to reach it, and
+Claude Code as a program that calls that same API repeatedly, adding
+tool management and permissions on top. Demystified the tool used
+this entire course by understanding its actual foundation.
