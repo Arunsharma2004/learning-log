@@ -928,3 +928,44 @@ the Messages API as the communication mechanism to reach it, and
 Claude Code as a program that calls that same API repeatedly, adding
 tool management and permissions on top. Demystified the tool used
 this entire course by understanding its actual foundation.
+
+## Day 30 — Building a Small Agent
+
+Started by predicting whether "read a file and count its words" could
+be done in a single API call - initially said yes, then caught my own
+error: Claude has no way to know a file's contents until something
+actually reads it and sends the real content back. Traced the correct,
+real sequence (request tool -> execute -> send result back -> now
+Claude can answer), which made clear exactly why an agent needs a
+LOOP, not a single call - the number of round-trips isn't fixed, it
+emerges from however many tool calls a task genuinely requires.
+
+Insisted the shell-command tool must always ask for y/n confirmation
+before running, before any code was written - a deliberate safety
+decision built in from the start, mirroring Claude Code's own
+philosophy rather than something imposed externally.
+
+Built and read through agent.py line by line: TOOLS definitions
+matching yesterday's concepts, real functions with genuine input()
+confirmation, and the actual while True loop checking
+stop_reason == "tool_use" each round. Correctly predicted how the
+loop would handle a hypothetical two-tool task, confirming real
+understanding of why while True (not a fixed step count) is the
+right structure.
+
+Finished with a full, honest comparison: the core loop is genuinely
+IDENTICAL between this ~80-line script and Claude Code - same
+architecture. What's different is pure engineering layered on top:
+many more tools (including MCP), auto-mode judgment, context
+management, hooks/commands/subagents, and a real UI. The tool used
+this entire course was never architecturally mysterious - it's built
+on exactly the primitives now understood and implemented firsthand.
+
+Also used today to properly learn the full git init -> commit ->
+remote add origin -> branch -M main -> push -u workflow well enough
+to explain and run independently - clarified that origin names the
+REMOTE connection (not local git), that git init auto-creates a
+default branch whose name depends on local config, that branch -M
+main forces it to match GitHub's expected default, and that -u
+creates a lasting local-to-remote link so future pushes only need
+"git push."
