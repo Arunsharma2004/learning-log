@@ -969,3 +969,44 @@ default branch whose name depends on local config, that branch -M
 main forces it to match GitHub's expected default, and that -u
 creates a lasting local-to-remote link so future pushes only need
 "git push."
+
+## Day 31 — CI/CD Integration
+
+Set up a GitHub Actions workflow (ci.yml) on url-shortener to run ruff
+and pytest automatically on every push/PR, on a fresh Ubuntu runner with
+no local setup carried over - confirmed it genuinely passed end-to-end
+rather than assuming a green check meant anything by itself.
+
+Went further and wired up anthropics/claude-code-action to post an
+automated review comment on every PR, authenticated with a
+CLAUDE_CODE_OAUTH_TOKEN repo secret and deliberately scoped to
+"Bash(git diff:*),Bash(git log:*)" only - same restrict-the-agent's-tools
+principle as Day 30's shell-confirmation decision, just enforced at the
+CI level instead of inside a script.
+
+Hit three real failures in a row and diagnosed each instead of guessing:
+a ruff import-block ordering error (a stray comment landed inside the
+import block, fixed with ruff check --fix), a missing id-token: write
+permission causing an OIDC token error, and a 401 because the separate
+Claude Code GitHub App wasn't installed on the repo yet. Nearly
+celebrated too early after the first fix passed - caught that "one check
+passed" isn't "the pipeline works," and kept debugging until all three
+were actually resolved.
+
+Also nearly stopped at "the workflow succeeded" without checking whether
+it had actually posted anything. Was pushed to slow down and get real
+evidence instead of guessing across different GitHub UI tabs - found
+the literal "No buffered inline comments" line in the run log, which
+proved the reviewer had genuinely evaluated the diff and correctly found
+nothing to flag on a trivial change, not that it silently failed.
+
+Had a real security incident in the middle of this: pasted the actual
+CLAUDE_CODE_OAUTH_TOKEN value into chat. Treated it as a genuine
+exposure rather than something to excuse - revoked it from claude.ai
+under Claude Code's Authorization tokens (not the separate,
+unrelated API keys page), generated a replacement, and this time only
+confirmed possession of the new one without ever typing its value here.
+
+Closed the day by working out the "team angle" properly, including a
+gap caught midway through: CLAUDE.md and .claude/commands and
+.claude/agents are ordinary tracked files, so they travel
