@@ -1011,4 +1011,3 @@ Closed the day by working out the "team angle" properly, including a
 gap caught midway through: CLAUDE.md and .claude/commands and
 .claude/agents are ordinary tracked files, so they travel
 
-## Day 32
