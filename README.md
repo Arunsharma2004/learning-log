@@ -1011,3 +1011,54 @@ Closed the day by working out the "team angle" properly, including a
 gap caught midway through: CLAUDE.md and .claude/commands and
 .claude/agents are ordinary tracked files, so they travel
 
+## Day 32 — Advanced Context & Multi-Session Strategy
+
+Started from the concrete problem: doing two unrelated features in one
+session doesn't just fill up context faster, it lets one feature's
+leftover exploration and mistakes silently influence the other, and it
+makes the resulting diff impossible to cleanly review or revert. Initially
+reasoned this was mainly a "merge conflict at push time" problem, but
+pushed to think harder - the real danger with two terminals on the same
+branch is worse than a merge conflict, since it's two agents writing to
+the identical files on disk live, with no git boundary to even catch it.
+
+Learned and used git worktree for real: created two sibling folders off
+main, each checked out to its own branch, sharing one .git history. Ran
+two fully separate Claude Code sessions - one extracting the duplicated
+404-lookup logic into a get_link_or_404 dependency, one adding a
+max_length constraint to ShortenRequest.original_url - each isolated
+from the other's context entirely.
+
+Reviewed both plans properly rather than approving on reflex. Misread a
+diff's red/removed vs green/added lines as a duplicate import at first,
+but held ground and correctly explained the actual diff convention -
+a good instance of not just accepting a wrong correction. On the second
+plan, worked through why FastAPI caching get_db per-request matters:
+if get_link_or_404 and the route handler used two different DB sessions,
+the fetched Link object would belong to one session while the commit
+happened through another - not just "both need the db," but a real
+SQLAlchemy object-attachment and connection-duplication problem.
+
+Hit a test-count mismatch (46 vs 47) that turned into a genuine lesson
+about worktree isolation - each worktree is a separate folder on disk,
+so pytest run in one can never see changes made in another, even though
+both are branches of the same repo. Also learned worktrees don't share
+a venv, since venv/ is gitignored and never travels with git's tracked
+history the way the branches themselves do.
+
+Merged both branches into main via PR, watched the automated review
+workflow fire on both without needing to think about it - CI from
+Day 31 now just quietly does its job. Also learned GitHub's contribution
+graph only counts commits on the default branch, not on feature
+branches - which explained why pushing to two feature branches showed
+zero contribution until they were actually merged.
+
+Closed the day on when NOT to use AI: security-sensitive logic, because
+bugs there don't fail loudly during normal testing the way feature bugs
+do - they pass every test built around legitimate use and only break
+under a deliberately adversarial input, so review has to be actively
+adversarial itself. And code beyond current understanding, because
+"review before approving" only means something if you're capable of
+judging correctness - without that, review degrades into rubber-
+stamping, and it also means never building the ability to maintain
+that code without AI later.
