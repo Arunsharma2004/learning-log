@@ -1062,5 +1062,3 @@ adversarial itself. And code beyond current understanding, because
 judging correctness - without that, review degrades into rubber-
 stamping, and it also means never building the ability to maintain
 that code without AI later.
-
-## Day 33
