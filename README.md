@@ -1062,3 +1062,58 @@ adversarial itself. And code beyond current understanding, because
 judging correctness - without that, review degrades into rubber-
 stamping, and it also means never building the ability to maintain
 that code without AI later.
+
+## Day 33 — Security, Privacy & Professional Practice
+
+Started from what actually gets sent to the API on every request - not
+just the current message, but the entire accumulated context: chat
+history, every file a Read tool opened, every shell command's output.
+Connected this directly back to Day 30's toy agent loop - there's no
+memory between calls, so the whole context gets resent each time,
+which means anything that ever enters it once stays exposed on every
+subsequent request too.
+
+Assumed a `.claudeignore` file existed as a direct equivalent to
+.gitignore, but had it verified properly rather than taught from
+memory - it doesn't exist. The real mechanism is two-layered: Claude
+Code already respects .gitignore by default (so gitignored files are
+protected from Claude's reads for free), and a `permissions.deny` block
+in .claude/settings.json gives explicit, tool-level control for
+anything needing tighter guarantees.
+
+Set this up for real on url-shortener - added deny rules blocking
+Read access to .env, secrets/, *.key, *.pem files. First attempt used
+lowercase tool names and got silently skipped; Claude Code's own error
+message pointed at the exact fix (Read, not read - matching the
+capitalized tool names used everywhere else, like Day 31's
+Bash(git diff:*) pattern). Verified it properly rather than trusting
+it worked - asked Claude Code to read .env directly and confirmed it
+genuinely refused, correctly noting the block only applies to Claude's
+own tool, not to me directly viewing the file myself.
+
+Hit the exact same PowerShell UTF-16 encoding trap again while testing
+this - a `"..." > .env` command silently wrote the file in UTF-16LE
+with a BOM, which then broke pytest's collection when main.py tried to
+load it through Starlette's Config. Recognized the pattern myself this
+time from the UnicodeDecodeError alone, without needing it explained -
+same root cause as the original .gitignore incident, just a different
+file. Deleted the throwaway test file, re-verified .env was properly
+gitignored before committing anything, and pushed the real fix clean.
+
+Closed the day studying three categories of AI-code security review.
+Injection: understood it as user input being treated as code instead
+of data, using a string-concatenated SQL login bypass as the concrete
+example, then correctly identified why SQLAlchemy's .filter() is safe -
+not because of "checking existence" as first guessed, but because the
+ORM sends the value as a separate parameter from the query text itself,
+never splicing it into raw SQL. Path traversal: walked through how
+".." escapes an intended folder to reach files like /etc/passwd, then
+actually checked both real projects rather than assuming - correctly
+concluded neither has this vulnerability, since neither one opens files
+from disk based on user input at all. Unsafe deserialization: learned
+why pickle is fundamentally different from JSON - it can encode
+"execute this code" as part of reconstructing an object, so
+deserializing an untrusted pickle file can mean full code execution,
+not just bad data, which is exactly why using Pydantic/JSON for all
+request bodies has been the safe choice all along without ever having
+been a deliberate security decision until now.
