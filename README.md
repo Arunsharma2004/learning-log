@@ -1110,12 +1110,4 @@ never splicing it into raw SQL. Path traversal: walked through how
 ".." escapes an intended folder to reach files like /etc/passwd, then
 actually checked both real projects rather than assuming - correctly
 concluded neither has this vulnerability, since neither one opens files
-from disk based on user input at all. Unsafe deserialization: learned
-why pickle is fundamentally different from JSON - it can encode
-"execute this code" as part of reconstructing an object, so
-deserializing an untrusted pickle file can mean full code execution,
-not just bad data, which is exactly why using Pydantic/JSON for all
-request bodies has been the safe choice all along without ever having
-been a deliberate security decision until now.
-
-##Day 34
+from disk based on user input at all.Thus it was all about the privacy.
