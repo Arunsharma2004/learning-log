@@ -1118,3 +1118,7 @@ not just bad data, which is exactly why using Pydantic/JSON for all
 request bodies has been the safe choice all along without ever having
 been a deliberate security decision until now.
 
+## Day 34
+A
+
+
